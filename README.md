@@ -1,1 +1,1 @@
-# bb_daily
+auto-daily

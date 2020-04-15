@@ -1,0 +1,40 @@
+{
+  /**
+  * Application configuration section
+  * http://pm2.keymetrics.io/docs/usage/application-declaration/
+  */
+  "apps" : [
+    {
+      "name"                 : "autodaily-api",
+      "script"               : "app.js",
+      "append_env_to_name"   : true,
+      "instances"            : 1,
+      "merge_logs"           : true,
+      "autorestart"          : true,
+      "exec_mode"            : "fork",
+      "post_update"          : ["echo post_update api"],
+      "max_memory_restart"   : "1000M"
+    }
+  ],
+
+  /**
+  * Deployment section
+  * http://pm2.keymetrics.io/docs/usage/deployment/
+  */
+  "deploy" : {
+    "dev" : {
+      "user" : "deploy",
+      "host" : "autodaily-api.dev.devathon.com",
+      "ref"  : "origin/dev",
+      "repo" : "git@gitlab.crypsis.net:autodaily/autodaily-backend.git",
+      "path" : "/home/deploy/webapps/api-dev.autodaily.io",
+      "post-deploy" : ". /home/deploy/.nvm/nvm.sh && nvm use 12 && npm install && DOTENV_PATH=/home/deploy/webapps/api-dev.autodaily.io/config/env npx sequelize-cli db:migrate && pm2 startOrRestart config/ecosystem/api.json --env dev",
+      "env"  : {
+        "NODE_ENV": "dev",
+        "DOTENV_PATH": "/home/deploy/webapps/api-dev.autodaily.io/config/env"
+      }
+    }
+  }
+}
+
+
